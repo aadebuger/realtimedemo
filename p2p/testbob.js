@@ -13,7 +13,7 @@ AV.init({
   appKey: appKey,
   serverURL: server,
 });
-
+localStorage.setItem('debug', 'LC*');
 // 请换成你自己的一个房间的 conversation id（这是服务器端生成的）
 var roomId = '60421d6912e38b5bf6e67f41';
 //roomId = '5989569dda2f6000616cfb671';
@@ -50,14 +50,20 @@ var inputPassword = document.getElementById('input-password');
 var inputSend = document.getElementById('input-send');
 var printWall = document.getElementById('print-wall');
 
+var jroomid = document.getElementById('roomid');
+
+var joinBtn = document.getElementById('join-btn');
 // 拉取历史相关
 // 最早一条消息的时间戳
 var msgTime;
-
+var myclient;
 bindEvent(loginBtn, 'click', login);
 bindEvent(signUpBtn, 'click', signUp);
 bindEvent(sendBtn, 'click', sendMsg);
 bindEvent(sendBtnAsFile, 'click', sendMsgAsFile);
+
+
+bindEvent(joinBtn, 'click', join);
 
 bindEvent(document.body, 'keydown', function(e) {
   if (e.keyCode === 13) {
@@ -102,6 +108,7 @@ function login() {
       showLog('连接成功');
       firstFlag = false;
       client = c;
+      myclient = c;
       client.on('disconnect', function() {
         showLog('[disconnect] 服务器连接已断开');
       });
@@ -129,7 +136,10 @@ function login() {
       client.on('reconnecterror', function() {
         showLog('[reconnecterror] 重连失败');
       });
-      client.on(Event.INVITED, function invitedEventHandler(payload, conversation) {
+      client.on("invited", function invitedEventHandler(payload, conversation) {
+        showLog("invited")
+        showLog("roomid",conversation.id)
+        jroomid.value=conversation.id
         console.log(payload.invitedBy, conversation.id);
     });
     client.on('message', function(message, conversation) {
@@ -381,4 +391,15 @@ function bindEvent(dom, eventName, fun) {
   } else {
     dom.attachEvent('on' + eventName, fun);
   }
+}
+function join()
+{
+  showLog('加入房间');
+  myclient.getConversation(jroomid.value)
+  .then(function(conversation) {
+    room = conversation;
+    console.log("getconversation ok")
+    return conversation.join();
+  })
+
 }

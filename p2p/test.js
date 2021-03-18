@@ -9,7 +9,7 @@ var server = 'https://jvchwdgn.lc-cn-n1-shared.com';
   // server= 'http://192.168.8.47:5000'
   //server= 'http://172.20.10.4:5000'
 
-
+localStorage.setItem('debug', 'LC*');
 AV.init({
   appId: appId,
   appKey: appKey,
