@@ -52,6 +52,8 @@ var inputPassword = document.getElementById('input-password');
 var inputSend = document.getElementById('input-send');
 var printWall = document.getElementById('print-wall');
 
+var toinputName = document.getElementById('to-input-name');
+
 // 拉取历史相关
 // 最早一条消息的时间戳
 var msgTime;
@@ -133,10 +135,10 @@ function login() {
       });
       // 获取对话
       //return c.getConversation(roomId);
-
+      var member= toinputName.value
       return c.createConversation({ // tom 是一个 IMClient 实例
         // 指定对话的成员除了当前用户 Tom（SDK 会默认把当前用户当做对话成员）之外，还有 Jerry
-        members: ['Bob100'],
+        members: [member],
         // 对话名称
         name: 'Tom & Bob',
         unique: true
